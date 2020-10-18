@@ -77,33 +77,33 @@ class Mainwindow(QWidget):
         label5 = QLabel(self)
         label5.setText("Rotation:") 
         label5.move(500, 80)
-        textbox1 = QLineEdit(self)
-        textbox1.resize(80, 20)
-        textbox1.move(560, 80)
+        self.textbox1 = QLineEdit(self)
+        self.textbox1.resize(80, 20)
+        self.textbox1.move(560, 80)
         label6 = QLabel(self)
         label6.setText("deg") 
         label6.move(650, 80)
         label7 = QLabel(self)
         label7.setText("Scaling:") 
         label7.move(500, 130)
-        textbox2 = QLineEdit(self)
-        textbox2.resize(80, 20)
-        textbox2.move(560, 130)
+        self.textbox2 = QLineEdit(self)
+        self.textbox2.resize(80, 20)
+        self.textbox2.move(560, 130)
         label8 = QLabel(self)
         label8.setText("Tx:") 
         label8.move(500, 180)
-        textbox3 = QLineEdit(self)
-        textbox3.resize(80, 20)
-        textbox3.move(560, 180)
+        self.textbox3 = QLineEdit(self)
+        self.textbox3.resize(80, 20)
+        self.textbox3.move(560, 180)
         label9 = QLabel(self)
         label9.setText("pixel") 
         label9.move(650, 180)
         label10 = QLabel(self)
         label10.setText("Ty:") 
         label10.move(500, 230)
-        textbox4 = QLineEdit(self)
-        textbox4.resize(80, 20)
-        textbox4.move(560, 230)
+        self.textbox4 = QLineEdit(self)
+        self.textbox4.resize(80, 20)
+        self.textbox4.move(560, 230)
         label11 = QLabel(self)
         label11.setText("pixel") 
         label11.move(650, 230)
@@ -132,14 +132,12 @@ class Mainwindow(QWidget):
         imgr[:,:,0] = 0
         imgr[:,:,1] = 0
         cv2.imshow('red_img', imgr)
-
         #blue
         cv2.namedWindow('blue_img', cv2.WINDOW_NORMAL)
         imgb = cv2.imread("Q1_image/Flower.jpg")
         imgb[:,:,1] = 0
         imgb[:,:,2] = 0
         cv2.imshow('blue_img', imgb)
-
         #green
         cv2.namedWindow('green_img', cv2.WINDOW_NORMAL)
         imgg = cv2.imread("Q1_image/Flower.jpg")
@@ -148,7 +146,7 @@ class Mainwindow(QWidget):
         cv2.imshow('green_img', imgg)
 
     def on_click3(self):
-        print("button3 click")
+        #print("button3 click")
         cv2.namedWindow('original image', cv2.WINDOW_NORMAL)
         img = cv2.imread("Q1_image/Uncle_Roger.jpg")
         cv2.imshow('original image', img)
@@ -161,51 +159,74 @@ class Mainwindow(QWidget):
         print("button4 click") 
 
     def on_click5(self):
-        print("button5 click") 
+        #print("button5 click") 
+        img = cv2.imread('Q2_Image/Cat.png')
+        cv2.namedWindow('Median filter', cv2.WINDOW_NORMAL)
+        # apply the 7x7 median filter on the image
+        median = cv2.medianBlur(img,7)
+        cv2.imshow('Median filter', median)
 
     def on_click6(self):
-        print("button6 click") 
+        #print("button6 click") 
+        img = cv2.imread('Q2_Image/Cat.png')
+        cv2.namedWindow('Gaussian Blur', cv2.WINDOW_NORMAL)
+        # apply the 3x3 gaussian filter on the image
+        gaussian = cv2.GaussianBlur(img,(3,3),0)
+        cv2.imshow('Gaussian Blur', gaussian)
 
     def on_click7(self):
-        print("button7 click") 
+        #print("button7 click") 
+        img = cv2.imread('Q2_Image/Cat.png')
+        cv2.namedWindow('Bilateral filter', cv2.WINDOW_NORMAL)
+        # apply the 3x3 gaussian filter on the image
+        bilateral = cv2.bilateralFilter(img,9,90,90)
+        cv2.imshow('Bilateral filter', bilateral)
 
     def on_click8(self):
-        print("button8 click") 
+        #print("button8 click") 
         img = cv2.imread('Q3_Image/Chihiro.jpg', cv2.IMREAD_GRAYSCALE)
         cv2.namedWindow('gaussian', cv2.WINDOW_NORMAL)
         out=Gaussian(img)
         cv2.imshow('gaussian',out)
 
     def on_click9(self):
-        print("button9 click") 
+        #print("button9 click") 
         img = cv2.imread('Q3_Image/Chihiro.jpg', cv2.IMREAD_GRAYSCALE)
         out=Gaussian(img)
-
         cv2.namedWindow('Sobelx', cv2.WINDOW_NORMAL)
         out_sobelx = Sobelx(out)
         cv2.imshow('Sobelx', out_sobelx)
 
     def on_click10(self):
-        print("button10 click") 
+        #print("button10 click") 
         img = cv2.imread('Q3_Image/Chihiro.jpg', cv2.IMREAD_GRAYSCALE)
         out=Gaussian(img)
-
         cv2.namedWindow('Sobely', cv2.WINDOW_NORMAL)
         out_sobely = Sobely(out)
         cv2.imshow('Sobely', out_sobely)
 
-
     def on_click11(self):
-        print("button11 click") 
+        #print("button11 click") 
         img = cv2.imread('Q3_Image/Chihiro.jpg', cv2.IMREAD_GRAYSCALE)
         out=Gaussian(img)
 
-        cv2.namedWindow('Sobel', cv2.WINDOW_NORMAL)
+        cv2.namedWindow('Magnitude', cv2.WINDOW_NORMAL)
         out_sobel = Sobel(out,80)
-        cv2.imshow('Sobel', out_sobel)
+        cv2.imshow('Magnitude', out_sobel)
      
     def on_click12(self):
         print("button12 click") 
+        rotation = self.textbox1.text()
+        print (rotation)
+        scaling = self.textbox2.text()
+        print (scaling)
+        tx = self.textbox3.text()
+        print (tx)
+        ty = self.textbox4.text()
+        print (ty)
+        cv2.namedWindow('4', cv2.WINDOW_NORMAL)
+        img = cv2.imread('Q4_Image/Parrot.png')
+        cv2.imshow('4', img)
     
 class Smallwindow(QWidget):
     def __init__(self,name):
