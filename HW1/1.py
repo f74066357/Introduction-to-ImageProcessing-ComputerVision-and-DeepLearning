@@ -216,17 +216,25 @@ class Mainwindow(QWidget):
      
     def on_click12(self):
         print("button12 click") 
-        rotation = self.textbox1.text()
-        print (rotation)
-        scaling = self.textbox2.text()
-        print (scaling)
-        tx = self.textbox3.text()
+        angle = float(self.textbox1.text())
+        print (angle)
+        scale = float(self.textbox2.text())
+        print (scale)
+        tx = float(self.textbox3.text())
         print (tx)
-        ty = self.textbox4.text()
+        ty = float(self.textbox4.text())
         print (ty)
         cv2.namedWindow('4', cv2.WINDOW_NORMAL)
         img = cv2.imread('Q4_Image/Parrot.png')
         cv2.imshow('4', img)
+
+        cv2.namedWindow('4ans', cv2.WINDOW_NORMAL)
+        rows, cols = img.shape[0:2]
+        M1 = np.float32([[1,0,tx],[0,1,ty]])
+        dst = cv2.warpAffine(img, M1, (cols,rows)) #move
+        M2 = cv2.getRotationMatrix2D((cols/2,rows/2),angle, scale) #rotate and scale
+        dst = cv2.warpAffine(dst, M2, (cols, rows))
+        cv2.imshow('4ans', dst)
     
 class Smallwindow(QWidget):
     def __init__(self,name):
