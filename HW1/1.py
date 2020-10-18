@@ -6,6 +6,7 @@ Created on Sat Oct 17 10:47:42 2020
 """
 import sys
 import cv2
+import numpy as np
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QIcon, QPixmap
 from PyQt5.QtCore import *
@@ -114,7 +115,6 @@ class Mainwindow(QWidget):
         self.show()
         
         
-    """创建鼠标点击事件"""
     @pyqtSlot()
     def on_click1(self):
         print("button1 click") #open 1-1window
@@ -171,15 +171,38 @@ class Mainwindow(QWidget):
 
     def on_click8(self):
         print("button8 click") 
+        img = cv2.imread('Q3_Image/Chihiro.jpg', cv2.IMREAD_GRAYSCALE)
+        cv2.namedWindow('gaussian', cv2.WINDOW_NORMAL)
+        out=Gaussian(img)
+        cv2.imshow('gaussian',out)
 
     def on_click9(self):
         print("button9 click") 
+        img = cv2.imread('Q3_Image/Chihiro.jpg', cv2.IMREAD_GRAYSCALE)
+        out=Gaussian(img)
+
+        cv2.namedWindow('Sobelx', cv2.WINDOW_NORMAL)
+        out_sobelx = Sobelx(out)
+        cv2.imshow('Sobelx', out_sobelx)
 
     def on_click10(self):
         print("button10 click") 
+        img = cv2.imread('Q3_Image/Chihiro.jpg', cv2.IMREAD_GRAYSCALE)
+        out=Gaussian(img)
+
+        cv2.namedWindow('Sobely', cv2.WINDOW_NORMAL)
+        out_sobely = Sobely(out)
+        cv2.imshow('Sobely', out_sobely)
+
 
     def on_click11(self):
         print("button11 click") 
+        img = cv2.imread('Q3_Image/Chihiro.jpg', cv2.IMREAD_GRAYSCALE)
+        out=Gaussian(img)
+
+        cv2.namedWindow('Sobel', cv2.WINDOW_NORMAL)
+        out_sobel = Sobel(out,80)
+        cv2.imshow('Sobel', out_sobel)
      
     def on_click12(self):
         print("button12 click") 
@@ -196,6 +219,68 @@ class Smallwindow(QWidget):
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
+
+def Gaussian(img):
+    #print(img.shape)
+    r,c= img.shape #長，寬
+    blur = np.zeros((r, c)) 
+    gaussian = np.array([[0.045,0.122,0.045],[0.122,0.332,0.122],[0.045,0.122,0.045]])
+    for i in range(r-2):  
+        for j in range(c-2):
+            blur[i+1, j+1] = abs(np.sum(img[i:i+3, j:j+3] * gaussian))  
+    #print(blur.min(),blur.max())
+    #blur = blur*255.0 / blur.max() #正規化到0~255    
+    return np.uint8(blur) #像素值0~255 -> unit8
+
+def Sobelx(img):
+    r,c= img.shape #長，寬
+    g = np.zeros((r, c))  
+    gX = np.zeros(img.shape) 
+    sobel_X = np.array([[-1,0,1],[-2,0,2],[-1,0,1]])
+    for i in range(r-2):  
+        for j in range(c-2):
+            gX[i+1, j+1] = abs(np.sum(img[i:i+3, j:j+3] * sobel_X))  
+    #print(gX.min(),gX.max())
+    g = gX*255.0 / gX.max() #正規化到0~255    
+    return np.uint8(g) #像素值0~255 -> unit8
+
+def Sobely(img):
+    r,c= img.shape #長，寬
+    g = np.zeros((r, c))  
+    gY = np.zeros(img.shape)
+    sobel_Y = np.array([[1,2,1],[0,0,0],[-1,-2,-1]]) 
+    for i in range(r-2):  
+        for j in range(c-2): 
+            gY[i+1, j+1] = abs(np.sum(img[i:i+3, j:j+3] * sobel_Y))
+    #print(gY.min(),gY.max())
+    g = gY*255.0 / gY.max() #正規化到0~255
+    return np.uint8(g) #像素值0~255 -> unit8
+
+def Sobel(img,threshold):
+    r,c= img.shape #長，寬
+    g = np.zeros((r, c))  
+    gX = np.zeros(img.shape)  
+    gY = np.zeros(img.shape)  
+    sobel_X = np.array([[-1,0,1],[-2,0,2],[-1,0,1]])  
+    sobel_Y = np.array([[1,2,1],[0,0,0],[-1,-2,-1]]) 
+    #計算在橫&縱的梯度 也就是和sobel_X、sobel_Y的捲積
+    for i in range(r-2):  
+        for j in range(c-2):
+            gX[i+1, j+1] = abs(np.sum(img[i:i+3, j:j+3] * sobel_X))  
+            gY[i+1, j+1] = abs(np.sum(img[i:i+3, j:j+3] * sobel_Y))  
+            g[i+1, j+1] = (gX[i+1, j+1]*gX[i+1,j+1] + gY[i+1, j+1]*gY[i+1,j+1])**0.5 #平方相加開根號
+    #print(g.min(),g.max())
+    #g = g*255.0 / g.max() #正規化到0~255
+    #這段選擇要使用閾值判斷邊界，大於閾值則為邊界 註解後不設閾值
+    '''
+    #print(np.max(g))
+    #print(np.min(g))
+    for p in range(r):  
+        for q in range(c): 
+            if g[p, q] < threshold: #大於閾值則為邊界
+                g[p, q] = 0
+    '''       
+    return np.uint8(g) #像素值0~255 -> unit8
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
