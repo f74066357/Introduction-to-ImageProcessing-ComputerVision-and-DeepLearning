@@ -18,7 +18,7 @@ class Mainwindow(QWidget):
         self.title = "F7406637_HW1"
         self.left = 50
         self.top = 50
-        self.width = 720
+        self.width = 1000
         self.height = 360
         self.initUI()
     
@@ -107,10 +107,35 @@ class Mainwindow(QWidget):
         label11 = QLabel(self)
         label11.setText("pixel") 
         label11.move(650, 230)
-
         button12 = QPushButton("4 Transformation", self)
         button12.move(500, 280) #座標
         button12.clicked.connect(self.on_click12)
+
+        label12 = QLabel(self)
+        label12.setText("5 VGG16") 
+        label12.move(750, 30)
+        button13 = QPushButton("1. show train images", self)
+        button13.move(750, 80) #座標
+        button13.clicked.connect(self.on_click13)
+        button14 = QPushButton("2. show hyperparameters", self)
+        button14.move(750, 130) #座標
+        button14.clicked.connect(self.on_click14)
+        button15 = QPushButton("3. show model structure", self)
+        button15.move(750, 180) #座標
+        button15.clicked.connect(self.on_click15)
+        button16 = QPushButton("4. show accuracy", self)
+        button16.move(750, 230) #座標
+        button16.clicked.connect(self.on_click16)
+        label17 = QLabel(self)
+        label17.setText("5. test image index:") 
+        label17.move(750, 280)
+        self.textbox5 = QLineEdit(self)
+        self.textbox5.resize(80, 20)
+        self.textbox5.move(880, 280)
+        button17 = QPushButton("inference", self)
+        button17.move(800, 320) #座標
+        button17.clicked.connect(self.on_click17)
+
 
         self.show()
         
@@ -235,6 +260,17 @@ class Mainwindow(QWidget):
         M2 = cv2.getRotationMatrix2D((cols/2,rows/2),angle, scale) #rotate and scale
         dst = cv2.warpAffine(dst, M2, (cols, rows))
         cv2.imshow('4ans', dst)
+
+    def on_click13(self):
+        print("button13 click")
+    def on_click14(self):
+        print("button14 click")
+    def on_click15(self):
+        print("button15 click")
+    def on_click16(self):
+        print("button16 click")
+    def on_click17(self):
+        print("button17 click")
     
 class Smallwindow(QWidget):
     def __init__(self,name):
